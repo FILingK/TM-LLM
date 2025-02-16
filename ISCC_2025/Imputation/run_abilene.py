@@ -22,7 +22,7 @@ command = [
     "--task_name", "imputation",
     "--is_training", "1",
     "--root_path", r"../datasets/net_traffic/Abilene",
-    "--data_path", "abilene_tm.csv",
+    "--data_path", "abilene.csv",
     "--model_id", f"Abilene_maskrate_{mask_rate}_{model}_samplenum{samplenum}_seq_{seq_len}",
     "--llm_model", llm_model,
     "--data", "net_traffic_abilene",
