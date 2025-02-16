@@ -1,0 +1,1 @@
+ISCC_2025/datasets/**/*.csv filter=lfs diff=lfs merge=lfs -text
