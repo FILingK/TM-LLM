@@ -110,7 +110,6 @@ def ndcg(preds, trues, masks, features, k=10):
             valid_pred = torch.tensor(valid_pred, dtype=torch.float32)
             valid_true = torch.tensor(valid_true, dtype=torch.float32)
 
-            # **Obtain rankings, but use `530 - rank` transformation**
             pred_ranked = get_rank_dict(valid_pred, max_rank)
             true_ranked = get_rank_dict(valid_true, max_rank)
 
