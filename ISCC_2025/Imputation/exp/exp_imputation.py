@@ -31,7 +31,6 @@ class Exp_Imputation(Exp_Basic):
     def __init__(self, args):
         super(Exp_Imputation, self).__init__(args)
 
-        self.pred_len = 0
         self.seq_len = self.args.seq_len
         self.generator = Generator(self.args.seq_len, self.args.dec_in)
         self.discriminator = Discriminator(self.args.seq_len, self.args.dec_in)
@@ -342,17 +341,17 @@ class Exp_Imputation(Exp_Basic):
 
                 batch_x = batch_x * \
                           (stdev[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 batch_x = batch_x + \
                           (means[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
                 outputs = outputs * \
                           (stdev1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 outputs = outputs + \
                           (means1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
                 # pred = outputs.detach().cpu()
                 pred = outputs.cpu()
@@ -453,17 +452,17 @@ class Exp_Imputation(Exp_Basic):
 
                 batch_x = batch_x * \
                           (stdev[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 batch_x = batch_x + \
                           (means[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
                 outputs = outputs * \
                           (stdev1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 outputs = outputs + \
                           (means1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
 
                 loss = criterion(outputs[mask == 0], batch_x[mask == 0])
@@ -517,13 +516,14 @@ class Exp_Imputation(Exp_Basic):
         self.generator.load_state_dict(torch.load(best_model_path))
         self.generator.eval()
         self.model.eval()
+        features = 0
         with torch.no_grad():
             print(f'len_test:{len(test_loader)}')
             for i, batch_x in tqdm(enumerate(test_loader)):
                 batch_x = batch_x.float().to(self.device)
 
                 B, T, N = batch_x.shape
-
+                features = N
                 # Initialize the mask
                 mask = torch.zeros((B, T, N)).to(self.device)
 
@@ -576,17 +576,17 @@ class Exp_Imputation(Exp_Basic):
                 # eval
                 batch_x = batch_x * \
                           (stdev[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 batch_x = batch_x + \
                           (means[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
                 outputs = outputs * \
                           (stdev1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
                 outputs = outputs + \
                           (means1[:, 0, :].unsqueeze(1).repeat(
-                              1, self.pred_len + self.seq_len, 1))
+                              1, self.seq_len, 1))
 
 
                 outputs = outputs.cpu().numpy()
@@ -605,7 +605,7 @@ class Exp_Imputation(Exp_Basic):
 
 
         nmae, nrmse, kl, mspe = metric(preds[masks == 0], trues[masks == 0])
-        ndcg_v = ndcg(preds, trues, masks)
+        ndcg_v = ndcg(preds, trues, masks, features)
         print('nmae:{}, nrmse:{} kl:{} ndcg:{}'.format(nmae, nrmse, kl, ndcg_v))
         f = open("result_imputation.txt", 'a')
         f.write(setting + "  \n")
