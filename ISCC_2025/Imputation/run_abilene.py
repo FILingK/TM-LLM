@@ -49,5 +49,4 @@ command = [
     "--mask_rate", mask_rate
 ]
 
-# 运行命令
 subprocess.run(command)
