@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 ## Datasets
 - Abilene dataset
-- G�0�7ANT dataset
+- GÉANT dataset
 
 These two public datasets are under `.ISCC_2025/dataset/net_traffic`
 
@@ -51,7 +51,7 @@ Abilene Dataset Test:
 ```bash
 python .ISCC_2025/Imputation/run_abilene.py
 ```
-G�0�7ANT Dataset Test:
+GÉANT Dataset Test:
 ```bash
 python .ISCC_2025/Imputation/run_geant.py
 ```
@@ -62,10 +62,14 @@ Abilene Dataset Test:
 ```bash
 bash .ISCC_2025/Imputation/scripts/Abilene.sh
 ```
-G�0�7ANT Dataset Test:
+GÉANT Dataset Test:
 ```bash
-bash .ISCC_2025/Imputation/scripts/Geant.sh
+bash .ISCC_2025/Imputation/scripts/GEANT.sh
 ```
+
+## Detailed usage
+
+Please refer to ```run.py```for the detailed description of each hyperparameter.
 
 ## Contact
 
