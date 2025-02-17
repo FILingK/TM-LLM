@@ -1,12 +1,7 @@
-from data_provider.data_loader import Dataset_net_abilene, Dataset_net_geant, Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom
+from data_provider.data_loader import Dataset_net_abilene, Dataset_net_geant
 from torch.utils.data import DataLoader
 
 data_dict = {
-    'ETTh1': Dataset_ETT_hour,
-    'ETTh2': Dataset_ETT_hour,
-    'ETTm1': Dataset_ETT_minute,
-    'ETTm2': Dataset_ETT_minute,
-    'custom': Dataset_Custom,
     'net_traffic_abilene': Dataset_net_abilene,  # abilene
     'net_traffic_geant': Dataset_net_geant  # geant
 }
@@ -28,9 +23,6 @@ def data_provider(args, flag):
         drop_last = True
         batch_size = args.batch_size  # bsz for train and valid
         freq = args.freq
-
-    if args.data == 'm4':
-        drop_last = False
     data_set = Data(
         root_path=args.root_path,
         data_path=args.data_path,
