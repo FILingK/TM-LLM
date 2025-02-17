@@ -44,9 +44,7 @@ def NMAE_mean(pred, true):
 def get_rank_dict(arr, max_rank=530):
     """
     Get the rankings of an array (in descending order) and transform them to `max_rank - i`
-    :param arr: Input array (Tensor)
-    :param max_rank: The highest rank, default is 144
-    :return: Relevance ranking array (preserving the original order)
+    For the Abilene dataset, max_rank is set to 145 ; for the Geant dataset, max_rank is set to 530 (which equals the number of features + 1).
     """
     arr_np = arr.numpy()
     sorted_indices = np.argsort(arr_np)[::-1]  # Sort indices in descending order
