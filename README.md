@@ -1,7 +1,7 @@
 <div align="center">
   <!-- <h1><b> TM-LLM </b></h1> -->
   <!-- <h2><b> TM-LLM </b></h2> -->
-  <h2><b> (ISCC 2025) Network Traffic Matrix Imputation via Large Language Models </b></h2>
+  <h1><b> (ISCC 2025) Network Traffic Matrix Imputation via Large Language Models </b></h1>
 </div>
 
 ## Abstract
@@ -41,10 +41,10 @@ pip install -r requirements.txt
 - Abilene dataset
 - GÉANT dataset
 
-These two public datasets are under `.ISCC_2025/dataset/net_traffic`
+These two public datasets are under `.ISCC_2025/dataset/net_traffic/Abilene` and `.ISCC_2025/dataset/net_traffic/GEANT`.
 
 ## How to Run the Model
-We provide four experiment scripts for demonstration purpose under the folder
+We provide four experiment scripts for demonstration purpose under the folder `.ISCC_2025/Imputation` and `.ISCC_2025/Imputation/scripts`.
 ### Option 1: Using the .py Script
 
 Abilene Dataset Test:
@@ -69,7 +69,7 @@ bash .ISCC_2025/Imputation/scripts/GEANT.sh
 
 ## Detailed usage
 
-Please refer to ```run.py```for the detailed description of each hyperparameter.
+Please refer to ```run.py``` for the detailed description of each hyperparameter.
 
 ## Contact
 
