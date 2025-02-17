@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 data_dict = {
     'net_traffic_abilene': Dataset_net_abilene,
     'net_traffic_geant': Dataset_net_geant
+
 }
 
 batch_size_gan = 256
@@ -27,12 +28,13 @@ def data_provider_gan(args, flag):
         root_path=args.root_path,
         data_path=args.data_path,
         flag=flag,
-        size=[args.seq_len, args.label_len, args.pred_len],
+        size=[args.seq_len],
         features=args.features,
         target=args.target,
         timeenc=timeenc,
         percent=percent,
         freq=freq,
+        sample_num=args.sample_num,
         seasonal_patterns=args.seasonal_patterns
     )
     batch_size = batch_size_gan
