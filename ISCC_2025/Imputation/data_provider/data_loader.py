@@ -18,16 +18,13 @@ class Dataset_net_abilene(Dataset):
                  features='S', data_path='abilene_tm.csv',
                  target='OT', scale=True, timeenc=0, freq='h',
                  percent=100, sample_num=1000, seasonal_patterns=None):
-        # size [seq_len, label_len, pred_len]
+
         # info
         if size == None:
             self.seq_len = 24 * 4 * 4
-            self.label_len = 24 * 4
-            self.pred_len = 24 * 4
         else:
             self.seq_len = size[0]
-            self.label_len = size[1]
-            self.pred_len = size[2]
+
         # init
         assert flag in ['train', 'test', 'val']
         type_map = {'train': 0, 'val': 1, 'test': 2}
@@ -76,13 +73,13 @@ class Dataset_net_abilene(Dataset):
         num_vali = int(all_data - num_train - num_test)
         if self.set_type == 0:
             self.data_scale = 1
-            self.tot_len = num_train - self.seq_len - self.pred_len
+            self.tot_len = num_train - self.seq_len
         elif self.set_type == 1:
             self.data_scale = 1/8
-            self.tot_len = num_vali - self.seq_len - self.pred_len
+            self.tot_len = num_vali - self.seq_len
         else:
             self.data_scale = 1/8
-            self.tot_len = num_test - self.seq_len - self.pred_len
+            self.tot_len = num_test - self.seq_len
 
         # self.data_scale allocates samples to train, test, and validation sets.
         self.sample_num = int(self.sample_num*self.data_scale)
@@ -131,16 +128,13 @@ class Dataset_net_geant(Dataset):
                  features='S', data_path='abilene_tm.csv',
                  target='OT', scale=True, timeenc=0, freq='h',
                  percent=100, sample_num=1000, seasonal_patterns=None):
-        # size [seq_len, label_len, pred_len]
+
         # info
         if size == None:
             self.seq_len = 24 * 4 * 4
-            self.label_len = 24 * 4
-            self.pred_len = 24 * 4
         else:
             self.seq_len = size[0]
-            self.label_len = size[1]
-            self.pred_len = size[2]
+
         # init
         assert flag in ['train', 'test', 'val']
         type_map = {'train': 0, 'val': 1, 'test': 2}
@@ -201,13 +195,13 @@ class Dataset_net_geant(Dataset):
         if self.set_type == 0:
             self.data_scale = 1
             # tot_len is used to determine the position of the first data point when randomly selecting samples.
-            self.tot_len = num_train - self.seq_len - self.pred_len
+            self.tot_len = num_train - self.seq_len
         elif self.set_type == 1:
             self.data_scale = 1/8
-            self.tot_len = num_vali - self.seq_len - self.pred_len
+            self.tot_len = num_vali - self.seq_len
         else:
             self.data_scale = 1/8
-            self.tot_len = num_test - self.seq_len - self.pred_len
+            self.tot_len = num_test - self.seq_len
 
         # Divide in an 8:1:1 ratio
         self.sample_num = int(self.sample_num*self.data_scale)
