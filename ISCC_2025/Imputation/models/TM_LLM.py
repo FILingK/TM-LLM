@@ -35,20 +35,15 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.is_ln = configs.ln
         self.task_name = configs.task_name
-        self.pred_len = configs.pred_len
         self.seq_len = configs.seq_len
-        self.patch_size = configs.patch_size
-        self.stride = configs.stride
         self.seq_len = configs.seq_len
         self.d_ff = configs.d_ff
-        self.patch_num = (configs.seq_len + self.pred_len - self.patch_size) // self.stride + 1
 
-        self.padding_patch_layer = nn.ReplicationPad1d((0, self.stride))
         self.configs = configs
 
         self.flattenhead = FlattenHead(configs.d_model, self.configs.enc_in)
 
-        self.enc_embedding = DataEmbedding(configs.enc_in * self.patch_size, configs.d_model, configs.embed,
+        self.enc_embedding = DataEmbedding(configs.enc_in, configs.d_model, configs.embed,
                                            configs.freq,
                                            configs.dropout)  # modify***
         if configs.llm_model == 'gpt2':
@@ -171,8 +166,8 @@ class Model(nn.Module):
         dec_out = self.flattenhead(outputs).permute(0, 2, 1)
         dec_out = dec_out * \
                   (stdev[:, 0, :].unsqueeze(1).repeat(
-                      1, self.pred_len + self.seq_len, 1))
+                      1, self.seq_len, 1))
         dec_out = dec_out + \
                   (means[:, 0, :].unsqueeze(1).repeat(
-                      1, self.pred_len + self.seq_len, 1))
+                      1, self.seq_len, 1))
         return dec_out
