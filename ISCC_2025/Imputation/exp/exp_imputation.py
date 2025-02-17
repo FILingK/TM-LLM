@@ -218,7 +218,7 @@ class Exp_Imputation(Exp_Basic):
                 #  Train Generator
                 # -----------------
                 optimizer_G.zero_grad()
-                # 生成输出
+
                 output = self.generator(inp)
                 g_loss = adversarial_loss(self.discriminator(output), valid)
                 x_loss = torch.mean(self.args.Lambda * torch.abs(output - batch_x))
@@ -370,7 +370,7 @@ class Exp_Imputation(Exp_Basic):
         test_data, test_loader = self._get_data(flag='test')
 
         scaler = torch.cuda.amp.GradScaler()
-        # 进行预训练
+        
         generator = self.pre_train(setting)
         generator.eval()
         path0 = os.path.join('./pre_checkpoints/', setting)
