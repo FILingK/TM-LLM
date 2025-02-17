@@ -64,7 +64,7 @@ bash .ISCC_2025/Imputation/scripts/Abilene.sh
 ```
 GÉANT Dataset Test:
 ```bash
-bash .ISCC_2025/Imputation/scripts/GEANT.sh
+bash .ISCC_2025/Imputation/scripts/Geant.sh
 ```
 
 ## Detailed usage
