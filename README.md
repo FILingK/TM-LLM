@@ -41,7 +41,12 @@ pip install -r requirements.txt
 - Abilene dataset
 - GÉANT dataset
 
-These two public datasets are under `.ISCC_2025/dataset/net_traffic/Abilene` and `.ISCC_2025/dataset/net_traffic/GEANT`.
+These two public datasets are under `.ISCC_2025/dataset/net_traffic/Abilene` and `.ISCC_2025/dataset/net_traffic/GEANT`. To access these datasets, you can clone the entire project repository using the following Git command:
+
+```bash
+git clone https://github.com/FILingK/TM-LLM.git
+```
+
 
 ## How to Run the Model
 We provide four experiment scripts for demonstration purpose under the folder `.ISCC_2025/Imputation` and `.ISCC_2025/Imputation/scripts`.
@@ -64,7 +69,7 @@ bash .ISCC_2025/Imputation/scripts/Abilene.sh
 ```
 GÉANT Dataset Test:
 ```bash
-bash .ISCC_2025/Imputation/scripts/Geant.sh
+bash .ISCC_2025/Imputation/scripts/GEANT.sh
 ```
 
 ## Detailed usage
