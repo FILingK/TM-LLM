@@ -22,26 +22,19 @@ parser.add_argument('--model', type=str, required=True, default='Autoformer',
 
 # data loader
 parser.add_argument('--data', type=str, required=True, default='ETTm1', help='dataset type')
-parser.add_argument('--root_path', type=str, default='./data/ETT/', help='root path of the data file')
-parser.add_argument('--data_path', type=str, default='ETTh1.csv', help='data file')
+parser.add_argument('--root_path', type=str, default='./data/Abilene/', help='root path of the data file')
+parser.add_argument('--data_path', type=str, default='abilene.csv', help='data file')
 parser.add_argument('--features', type=str, default='M',
                     help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
 parser.add_argument('--target', type=str, default='OT', help='target feature in S or MS task')
 parser.add_argument('--freq', type=str, default='h',
                     help='freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h')
 parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
+parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset')
 
-# forecasting task
+# imputation task
 parser.add_argument('--seq_len', type=int, default=96, help='input sequence length')
-parser.add_argument('--label_len', type=int, default=48, help='start token length')
-parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
-parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
-
-# inputation task
 parser.add_argument('--mask_rate', type=float, default=0.25, help='mask ratio')
-
-# anomaly detection task
-parser.add_argument('--anomaly_ratio', type=float, default=0.25, help='prior anomaly ratio (%)')
 
 # model define
 parser.add_argument('--top_k', type=int, default=5, help='for TimesBlock')
@@ -88,10 +81,6 @@ parser.add_argument('--p_hidden_dims', type=int, nargs='+', default=[128, 128],
                     help='hidden layer dimensions of projector (List)')
 parser.add_argument('--p_hidden_layers', type=int, default=2, help='number of hidden layers in projector')
 
-# patching
-parser.add_argument('--patch_size', type=int, default=1)
-parser.add_argument('--stride', type=int, default=1)
-
 # LLM Configuration
 parser.add_argument('--gpt_layers', type=int, default=6)
 parser.add_argument('--ln', type=int, default=0)
@@ -100,8 +89,12 @@ parser.add_argument('--weight', type=float, default=0)
 parser.add_argument('--percent', type=int, default=100)
 parser.add_argument('--llm_dim', type=int, default=768)
 parser.add_argument('--llm_model', type=str, default="gpt2")
+
 # Adversarial learning
 parser.add_argument('--Lambda', type=int, default=2)
+
+# the number of samples
+parser.add_argument('--sample_num', type=int, default=1000)
 args = parser.parse_args()
 args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
 
@@ -119,15 +112,13 @@ Exp = Exp_Imputation
 if args.is_training:
     for ii in range(args.itr):
         # setting record of experiments
-        setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
+        setting = '{}_{}_{}_{}_ft{}_sl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
             args.task_name,
             args.model_id,
             args.model,
             args.data,
             args.features,
             args.seq_len,
-            args.label_len,
-            args.pred_len,
             args.d_model,
             args.n_heads,
             args.e_layers,
@@ -147,14 +138,12 @@ if args.is_training:
         torch.cuda.empty_cache()
 else:
     ii = 0
-    setting = '{}_{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
+    setting = '{}_{}_{}_ft{}_sl{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}_{}'.format(
         args.task_name,
         args.model_id,
         args.data,
         args.features,
         args.seq_len,
-        args.label_len,
-        args.pred_len,
         args.d_model,
         args.n_heads,
         args.e_layers,
