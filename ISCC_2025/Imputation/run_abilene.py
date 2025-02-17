@@ -7,14 +7,14 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 seq_len = 96
 model = "TM-LLM"
-pred_len = 0
 percent = 100
 mask_rate = "0.5"
 train_epochs ="10"
 itr = "3"
 llm_model = "gpt2"
-samplenum = 1000 #number of training samples
+sample_num = 1000 #number of training samples
 Lambda = 2
+
 command = [
     "/root/miniconda3/bin/python", "run.py",
     "--train_epochs", train_epochs,
@@ -23,12 +23,11 @@ command = [
     "--is_training", "1",
     "--root_path", r"../datasets/net_traffic/Abilene",
     "--data_path", "abilene.csv",
-    "--model_id", f"Abilene_maskrate_{mask_rate}_{model}_samplenum{samplenum}_seq_{seq_len}",
+    "--model_id", f"Abilene_maskrate_{mask_rate}_{model}_samplenum{sample_num}_seq_{seq_len}",
+    "--sample_num", str(sample_num),
     "--llm_model", llm_model,
     "--data", "net_traffic_abilene",
     "--seq_len", str(seq_len),
-    "--label_len", "0",
-    "--pred_len", str(pred_len),
     "--batch_size", "96",
     "--learning_rate", "0.001",
     '--mlp', "1",
@@ -37,11 +36,9 @@ command = [
     "--d_ff", "768",
     "--enc_in", "96",     # input of enc_embedding && output of flatten head
     "--dec_in", "144",     # feature
-    "--c_out", "144",       # outprojection
+    "--c_out", "144",       # mlp
     "--Lambda", str(Lambda),
     "--freq", "h",
-    "--patch_size", "1",
-    "--stride", "1",
     "--percent", str(percent),
     "--gpt_layer", "6",
     "--model", model,
