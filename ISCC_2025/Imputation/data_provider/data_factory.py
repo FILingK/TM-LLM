@@ -23,16 +23,18 @@ def data_provider(args, flag):
         drop_last = True
         batch_size = args.batch_size  # bsz for train and valid
         freq = args.freq
+
     data_set = Data(
         root_path=args.root_path,
         data_path=args.data_path,
         flag=flag,
-        size=[args.seq_len, args.label_len, args.pred_len],
+        size=[args.seq_len],
         features=args.features,
         target=args.target,
         timeenc=timeenc,
         percent=percent,
         freq=freq,
+        sample_num=args.sample_num,
         seasonal_patterns=args.seasonal_patterns
     )
     batch_size = args.batch_size
