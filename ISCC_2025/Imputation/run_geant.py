@@ -9,10 +9,10 @@ model = "TM-LLM"
 pred_len = 0
 percent = 100
 mask_rate = "0.5"
-train_epochs ="1"
-itr = "1"
+train_epochs ="10"
+itr = "3"
 llm_model = "gpt2"
-samplenum =5000
+samplenum =5000 # number of training samples
 Lambda = 5
 command = [
     "/root/miniconda3/bin/python", "run.py",
