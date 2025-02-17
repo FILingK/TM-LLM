@@ -13,7 +13,6 @@ llm_model="gpt2"
 samplenum=5000
 Lambda=5
 
-# 运行命令
 python -u /root/miniconda3/bin/python run.py \
     --train_epochs $train_epochs \
     --itr $itr \
