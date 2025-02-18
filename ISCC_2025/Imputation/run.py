@@ -10,7 +10,7 @@ random.seed(fix_seed)
 torch.manual_seed(fix_seed)
 np.random.seed(fix_seed)
 
-parser = argparse.ArgumentParser(description='TimesNet')
+parser = argparse.ArgumentParser(description='TM-LLM')
 
 # basic config
 parser.add_argument('--task_name', type=str, required=True, default='long_term_forecast',
