@@ -58,7 +58,7 @@ class Model(nn.Module):
         elif configs.llm_model == 'deepseek_R1':
             # Load model directly
             self.llm_config = AutoConfig.from_pretrained('../deepseek_R1_1.5b')
-            self.llm_config.num_hidden_layers = configs.gpt_layers
+            self.llm_config.num_hidden_layers = configs.gpt_layers  
             self.llm_config.output_attentions = True
             self.llm_config.output_hidden_states = True
             self.llm_model = AutoModelForCausalLM.from_pretrained(
@@ -69,6 +69,23 @@ class Model(nn.Module):
             )
             self.tokenizer = AutoTokenizer.from_pretrained(
                 '../deepseek_R1_1.5b',
+                trust_remote_code=True,
+                local_files_only=True
+            )
+        elif configs.llm_model == 'Llama_3':
+            # Load model directly
+            self.llm_config = AutoConfig.from_pretrained('../Llama_3.1_8b')
+            self.llm_config.num_hidden_layers = configs.gpt_layers
+            self.llm_config.output_attentions = True
+            self.llm_config.output_hidden_states = True
+            self.llm_model = AutoModelForCausalLM.from_pretrained(
+                '../Llama_3.1_8b',
+                trust_remote_code=True,
+                local_files_only=True,  # If the model file exists locally, load it from the local storage.
+                config=self.llm_config
+            )
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                '../Llama_3.1_8b',
                 trust_remote_code=True,
                 local_files_only=True
             )
@@ -125,7 +142,6 @@ class Model(nn.Module):
             max_values_str = str(max_values[b].tolist()[0])
             median_values_str = str(medians[b].tolist()[0])
             if self.configs.data_path == 'abilene.csv':
-                # Abilene
                 prompt_ = (
                     f"<|start_prompt|>"
                     f"The dataset consists of OD flow pairs between 12 routers (v1 to v12), "
@@ -145,7 +161,6 @@ class Model(nn.Module):
                     f'mask_rate {self.configs.mask_rate}'
                 )
             else:
-                # Geant
                 prompt_ = (
                     f"<|start_prompt|>"
                     f"The dataset consists of OD flow pairs between 23 routers (v1 to v23), "
