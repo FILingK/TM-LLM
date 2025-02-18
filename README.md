@@ -47,6 +47,8 @@ These two public datasets are under `.ISCC_2025/dataset/net_traffic/Abilene` and
 git clone https://github.com/FILingK/TM-LLM.git
 ```
 
+## LLM settings
+`TM-LLM.py` provides examples of using GPT2, deepseek_R1_1.5b, and llama_3.1_8b. Our experiments are based on these models. Please download the corresponding models from Hugging Face to the corresponding locations.
 
 ## How to Run the Model
 We provide four experiment scripts for demonstration purpose under the folder `.ISCC_2025/Imputation` and `.ISCC_2025/Imputation/scripts`.
