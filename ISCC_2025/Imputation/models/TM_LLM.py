@@ -116,43 +116,59 @@ class Model(nn.Module):
             torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
         x_enc /= stdev
         enc_out = self.enc_embedding(x_enc, x_mark_enc)  # [B,T,d_model]
-        # geant
-        prompt = (
-            f"<|start_prompt|>"
-            f'###discription:###'
-            f"The dataset consists of OD flow pairs between 23 routers (v1 to v23), "
-            f"with a total of 529 OD flows (x1 to x529), each row of the data represents an OD pair. Each OD pair has a time step length of {self.seq_len}."
-            f"Each flow xij represents the volume of traffic between two routers in the network, where xij is the flow from router vi to router vj, with i,j∈{1, 2, ..., 23}"
-            f"The flow x1 is the flow from v1 to v1, x2 is the flow from v1 to v2, x23 is the flow from v1 to v23 ,x24 is the flow from v2 to v1 "
-            f"and so on, up to x529, representing the flow from v23 to v23. "
-            f"The flow index k for any given xij is given by the formula：k = (i - 1)*23 + j where i,j∈{1, 2, ..., 23}"
-            f"Some values in the dataset are missing, and the missing values are marked as 0. "
-            f'###task:###'
-            f"The task is to learn the temporal relationships within the complete data of each row, "
-            f"as well as the traffic relationships between different rows, to infer and fill in the missing data"
-            f"Finally, only return the completed dataset after filling in the missing values."
-            f"<|<end_prompt>|>"
-        )
-        # abilene
-        # prompt = (
-        #     f"<|start_prompt|>"
-        #     f'###discription:###'
-        #     f"The dataset consists of OD flow pairs between 12 routers (v1 to v12), "
-        #     f"with a total of 144 OD flows (x1 to x144), each row of the data represents an OD pair. Each OD pair has a time step length of {self.seq_len}."
-        #     f"Each flow xij represents the volume of traffic between two routers in the network, where xij is the flow from router vi to router vj, with i,j∈{1, 2, ..., 12}"
-        #     f"The flow x1 is the flow from v1 to v1, x2 is the flow from v1 to v2, x12 is the flow from v1 to v12 ,x13 is the flow from v2 to v1 "
-        #     f"and so on, up to x144, representing the flow from v12 to v12. "
-        #     f"The flow index k for any given xij is given by the formula：k = (i - 1)*12 + j where i,j∈{1, 2, ..., 12}"
-        #     f"Some values in the dataset are missing, and the missing values are marked as 0. "
-        #     f'###task:###'
-        #     f"The task is to learn the temporal relationships within the complete data of each row, "
-        #     f"as well as the traffic relationships between different rows, to infer and fill in the missing data"
-        #     f"Finally, only return the completed dataset after filling in the missing values."
-        #     f"<|<end_prompt>|>"
-        # )
+        prompt = []
+        min_values = torch.min(x_enc, dim=1)[0]
+        max_values = torch.max(x_enc, dim=1)[0]
+        medians = torch.median(x_enc, dim=1).values
+        for b in range(x_enc.shape[0]):
+            min_values_str = str(min_values[b].tolist()[0])
+            max_values_str = str(max_values[b].tolist()[0])
+            median_values_str = str(medians[b].tolist()[0])
+            if self.configs.data_path == 'abilene.csv':
+                # Abilene
+                prompt_ = (
+                    f"<|start_prompt|>"
+                    f"The dataset consists of OD flow pairs between 12 routers (v1 to v12), "
+                    f"with a total of 144 OD flows (x1 to x144), each row of the data represents an OD pair. Each OD pair has a time step length of {self.seq_len}."
+                    f"Each flow xij represents the volume of traffic between two routers in the network, where xij is the flow from router vi to router vj, with i,j∈{1, 2, ..., 12}"
+                    f"The flow x1 is the flow from v1 to v1, x2 is the flow from v1 to v2, x12 is the flow from v1 to v12 ,x13 is the flow from v2 to v1 and so on, up to x144, representing the flow from v12 to v12.  "
+                    f"The flow index k for any given xij is given by the formula：k = (i - 1)*12 + j where i,j∈{1, 2, ..., 12}"
+                    f"Some values in the dataset are missing, and the missing values are marked as 0. "
+                    f'#Instruction:#'
+                    f"The task is to learn the temporal relationships within the complete data of each row, "
+                    f"as well as the traffic relationships between different rows, to infer and fill in the missing data"
+                    f"Finally, only return the completed dataset after filling in the missing values."
+                    f"Input statistics: "
+                    f"min value {min_values_str}, "
+                    f"max value {max_values_str}, "
+                    f"median value {median_values_str}, "
+                    f'mask_rate {self.configs.mask_rate}'
+                )
+            else:
+                # Geant
+                prompt_ = (
+                    f"<|start_prompt|>"
+                    f"The dataset consists of OD flow pairs between 23 routers (v1 to v23), "
+                    f"with a total of 529 OD flows (x1 to x529), each row of the data represents an OD pair. Each OD pair has a time step length of {self.seq_len}."
+                    f"Each flow xij represents the volume of traffic between two routers in the network, where xij is the flow from router vi to router vj, with i,j∈{1, 2, ..., 23}"
+                    f"The flow x1 is the flow from v1 to v1, x2 is the flow from v1 to v2, x23 is the flow from v1 to v23 ,x24 is the flow from v2 to v1 and so on, up to x529, representing the flow from v23 to v23."
+                    f"The flow index k for any given xij is given by the formula：k = (i - 1)*23 + j where i,j∈{1, 2, ..., 23}"
+                    f"Some values in the dataset are missing, and the missing values are marked as 0. "
+                    f'#Instruction:#'
+                    f"The task is to learn the temporal relationships within the complete data of each row, "
+                    f"as well as the traffic relationships between different rows, to infer and fill in the missing data"
+                    f"Finally, only return the completed dataset after filling in the missing values."
+                    f"Input statistics: "
+                    f"min value {min_values_str}, "
+                    f"max value {max_values_str}, "
+                    f"median value {median_values_str}, "
+                    f'mask_rate {self.configs.mask_rate}'
+                )
+            prompt.append(prompt_)
+
         prompt = self.tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=2048).input_ids
         prompt_embeddings = self.llm_model.get_input_embeddings()(prompt.to(x_enc.device))
-        prompt_embeddings = prompt_embeddings.expand(x_enc.size(0), -1, -1)
+        # prompt_embeddings = prompt_embeddings.expand(x_enc.size(0), -1, -1)
         combined_input = torch.cat((prompt_embeddings, enc_out), dim=1)  # Concatenate the prompt and the data
         if self.configs.llm_model == "gpt2":
             outputs = self.llm_model(inputs_embeds=combined_input).last_hidden_state
