@@ -82,7 +82,7 @@ parser.add_argument('--p_hidden_dims', type=int, nargs='+', default=[128, 128],
 parser.add_argument('--p_hidden_layers', type=int, default=2, help='number of hidden layers in projector')
 
 # LLM Configuration
-parser.add_argument('--gpt_layers', type=int, default=6)
+parser.add_argument('--gpt_layers', type=int, default=6) # hidden_layers
 parser.add_argument('--ln', type=int, default=0)
 parser.add_argument('--mlp', type=int, default=0)
 parser.add_argument('--weight', type=float, default=0)
